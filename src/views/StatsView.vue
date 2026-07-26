@@ -5,18 +5,59 @@ import NavBar from '@/components/common/NavBar.vue'
 import StreakCard from '@/components/stats/StreakCard.vue'
 import StatsGrid from '@/components/stats/StatsView.vue'
 import DifficultList from '@/components/stats/DifficultList.vue'
+import WrongWordList from '@/components/stats/WrongWordList.vue'
 import { useWordStore } from '@/stores/wordStore'
 import { useStatsStore } from '@/stores/statsStore'
+import { achievements } from '@/data/defaultWords'
 
 const route = useRoute()
 const router = useRouter()
 const wordStore = useWordStore()
 const statsStore = useStatsStore()
 
-const badges = computed(() => statsStore.streak.badges.map(id => statsStore.getBadgeName(id)))
+const badges = computed(() => {
+  return achievements.map(a => ({
+    id: a.id,
+    name: a.name,
+    description: getBadgeDescription(a.id),
+    unlocked: statsStore.streak.badges.includes(a.id),
+  }))
+})
+
+const wrongWords = computed(() => {
+  return wordStore.allWords.filter(w => w.wrong > 0).sort((a, b) => b.wrong - a.wrong)
+})
+
+const difficultWords = computed(() => {
+  return wordStore.allWords.filter(w => w.wrong >= 3).sort((a, b) => b.wrong - a.wrong)
+})
+
+function getBadgeDescription(id: string): string {
+  const descMap: Record<string, string> = {
+    first_day: '完成首次打卡',
+    perfect_quiz: '单次默写全对',
+    seven_days: '连续打卡7天',
+    hundred_words: '累计学习100词',
+    perfect_week: '完美一周',
+  }
+  return descMap[id] || ''
+}
 
 function handlePracticeDifficult() {
-  router.push('/quiz')
+  router.push('/quiz?mode=difficult')
+}
+
+function handlePracticeWrong() {
+  router.push('/quiz?mode=wrong')
+}
+
+function handleSelectWord(word: { id: string }) {
+  router.push({ path: '/', query: { wordId: word.id } })
+}
+
+async function handleClearWrongWords() {
+  if (!confirm('确定要清空所有错题记录吗？')) return
+  await wordStore.clearAllWrongWords()
 }
 </script>
 
@@ -26,7 +67,11 @@ function handlePracticeDifficult() {
 
     <div class="flex gap-6 flex-1 pb-24 md:pb-6">
       <aside class="desktop-sidebar w-[280px] flex-shrink-0 flex flex-col gap-5 hidden md:flex">
-        <StreakCard :streak="statsStore.streak.count" />
+        <StreakCard
+          :streak="statsStore.streak.count"
+          :daily-goal="20"
+          :today-learned="wordStore.learnedCount"
+        />
 
         <div class="stats-grid grid grid-cols-2 gap-4">
           <div class="stat-card bg-warm-card rounded-lg p-4 text-center shadow-sm border border-primary/10">
@@ -49,7 +94,7 @@ function handlePracticeDifficult() {
             </div>
           </div>
           <div class="progress-bar h-2 bg-primary/15 rounded-full overflow-hidden">
-            <div 
+            <div
               class="progress-fill h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-slow"
               :style="{ width: `${Math.min((wordStore.learnedCount / 20) * 100, 100)}%` }"
             ></div>
@@ -62,16 +107,24 @@ function handlePracticeDifficult() {
       </aside>
 
       <main class="main-content flex-1 flex flex-col gap-6">
-        <StatsGrid 
+        <StatsGrid
           :streak="statsStore.streak.count"
           :accuracy="statsStore.accuracy"
           :learned-count="wordStore.learnedCount"
           :badges="badges"
         />
 
-        <DifficultList 
-          :words="wordStore.getDifficultWords()"
+        <DifficultList
+          :words="difficultWords"
           @practice="handlePracticeDifficult"
+          @select="handleSelectWord"
+        />
+
+        <WrongWordList
+          :words="wrongWords"
+          @practice="handlePracticeWrong"
+          @select="handleSelectWord"
+          @clear="handleClearWrongWords"
         />
       </main>
     </div>

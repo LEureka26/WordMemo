@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import type { Word } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   words: Word[]
 }>()
 
 const emit = defineEmits<{
   (e: 'practice'): void
+  (e: 'select', word: Word): void
 }>()
+
+function getWrongLevelClass(wrong: number): string {
+  if (wrong >= 3) return 'bg-error text-white'
+  if (wrong >= 2) return 'bg-error/70 text-white'
+  return 'bg-error/40 text-white'
+}
+
+function getWrongLabel(wrong: number): string {
+  if (wrong >= 3) return '难词'
+  if (wrong >= 2) return '薄弱'
+  return '学习中'
+}
 </script>
 
 <template>
@@ -17,7 +30,7 @@ const emit = defineEmits<{
         <div class="card-title text-lg font-bold text-text-primary tracking-tight">难词本</div>
         <div class="card-subtitle text-sm text-text-muted">错误 3 次以上的单词</div>
       </div>
-      <button 
+      <button
         v-if="words.length > 0"
         class="btn btn-primary text-sm px-4 py-2"
         @click="emit('practice')"
@@ -30,14 +43,23 @@ const emit = defineEmits<{
       <div
         v-for="word in words"
         :key="word.id"
-        class="word-item flex items-center justify-between p-4 bg-warm-card rounded-md border border-error/20"
+        class="word-item flex items-center justify-between p-4 bg-warm-card rounded-md border border-error/20 cursor-pointer transition-all duration-normal hover:shadow-md hover:-translate-y-0.5"
+        @click="emit('select', word)"
       >
         <div class="word-item-content flex items-center gap-3.5">
-          <span class="word-item-status w-2.5 h-2.5 rounded-full bg-error"></span>
+          <span
+            class="word-item-status px-2 py-1 rounded text-xs font-medium"
+            :class="getWrongLevelClass(word.wrong)"
+          >
+            {{ getWrongLabel(word.wrong) }}
+          </span>
           <span class="word-item-english font-semibold text-sm text-text-primary">{{ word.english }}</span>
           <span class="word-item-chinese text-xs text-text-muted hidden md:inline">{{ word.chinese[0] }}</span>
         </div>
-        <span class="word-item-meta text-xs text-error font-medium">错误 {{ word.wrong }} 次</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-text-muted">对 {{ word.correct }} 次</span>
+          <span class="text-xs text-error font-medium">错 {{ word.wrong }} 次</span>
+        </div>
       </div>
 
       <div v-if="words.length === 0" class="text-center py-8 text-text-muted">

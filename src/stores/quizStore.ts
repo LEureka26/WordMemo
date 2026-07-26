@@ -16,6 +16,7 @@ export const useQuizStore = defineStore('quiz', () => {
   const words = ref<Word[]>([])
   const isFinished = ref(false)
   const wrongCount = ref(0)
+  const isRetryMode = ref(false)
 
   const currentWord = computed(() => {
     return words.value[currentIndex.value] || null
@@ -61,6 +62,7 @@ export const useQuizStore = defineStore('quiz', () => {
     results.value = []
     isFinished.value = false
     wrongCount.value = 0
+    isRetryMode.value = useWrongList
   }
 
   async function validate(input: string) {
@@ -123,6 +125,7 @@ export const useQuizStore = defineStore('quiz', () => {
     results.value = []
     isFinished.value = false
     wrongCount.value = 0
+    isRetryMode.value = false
   }
 
   return {
@@ -135,6 +138,7 @@ export const useQuizStore = defineStore('quiz', () => {
     words,
     isFinished,
     wrongCount,
+    isRetryMode,
     currentWord,
     progress,
     total,

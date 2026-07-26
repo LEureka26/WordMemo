@@ -8,6 +8,7 @@ const props = defineProps<{
   input: string
   currentIndex: number
   total: number
+  isDifficult?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -53,9 +54,17 @@ function handleSkip() {
 <template>
   <div class="quiz-section">
     <div class="quiz-word-display text-center mb-8">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-text-primary tracking-tight mb-3">
-        {{ word?.english || '-' }}
-      </h2>
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span
+          v-if="isDifficult"
+          class="px-2 py-0.5 rounded text-xs font-bold bg-error text-white"
+        >
+          难词
+        </span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-text-primary tracking-tight">
+          {{ word?.english || '-' }}
+        </h2>
+      </div>
       <p class="text-lg text-text-muted italic">
         /{{ word?.english?.toLowerCase() || '' }}/
       </p>

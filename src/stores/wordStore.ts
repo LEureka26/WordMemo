@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Word } from '@/types'
 import { generateUUID } from '@/utils/uuid'
-import { getWordGroups, setWordGroups, getActiveGroup, setActiveGroup, addWord, updateWord, deleteWord, createGroup, deleteGroup } from '@/services/storage'
+import { getWordGroups, setWordGroups, getActiveGroup, setActiveGroup, addWord, updateWord, deleteWord, createGroup, deleteGroup, clearWrongWords } from '@/services/storage'
 
 export const useWordStore = defineStore('word', () => {
   const wordGroups = ref<Record<string, Word[]>>({})
@@ -140,6 +140,15 @@ export const useWordStore = defineStore('word', () => {
     return JSON.stringify(words, null, 2)
   }
 
+  async function clearAllWrongWords() {
+    await clearWrongWords()
+    for (const group of Object.values(wordGroups.value)) {
+      for (const word of group) {
+        word.wrong = 0
+      }
+    }
+  }
+
   return {
     wordGroups,
     activeGroup,
@@ -161,5 +170,6 @@ export const useWordStore = defineStore('word', () => {
     getDifficultWords,
     importWords,
     exportWords,
+    clearAllWrongWords,
   }
 })

@@ -181,6 +181,17 @@ export async function deleteWord(wordId: string): Promise<void> {
   await saveData(data)
 }
 
+export async function clearWrongWords(): Promise<void> {
+  const data = await loadData()
+  for (const group of Object.values(data.wordGroups)) {
+    for (const word of group) {
+      word.wrong = 0
+    }
+  }
+  data.wrongList = []
+  await saveData(data)
+}
+
 export async function createGroup(name: string): Promise<void> {
   const data = await loadData()
   if (!data.wordGroups[name]) {

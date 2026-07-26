@@ -42,20 +42,6 @@ function setSpeed(rate: number) {
     </div>
 
     <div class="settings-toggle flex items-center gap-3 p-3.5 bg-warm-card rounded-md border border-primary/10 mb-4 transition-all duration-normal hover:bg-accent-light">
-      <span class="settings-label flex-1 text-sm font-medium text-text-primary">显示中文</span>
-      <div 
-        class="settings-switch w-12 h-7 rounded-full relative cursor-pointer transition-all duration-normal"
-        :class="settingsStore.settings.showChinese ? 'bg-gradient-to-r from-primary to-accent' : 'bg-primary/20'"
-        @click="toggleSetting('showChinese')"
-      >
-        <div 
-          class="absolute top-1 w-5 h-5 rounded-full bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-normal"
-          :class="settingsStore.settings.showChinese ? 'left-6' : 'left-1'"
-        ></div>
-      </div>
-    </div>
-
-    <div class="settings-toggle flex items-center gap-3 p-3.5 bg-warm-card rounded-md border border-primary/10 mb-4 transition-all duration-normal hover:bg-accent-light">
       <span class="settings-label flex-1 text-sm font-medium text-text-primary">模糊匹配</span>
       <div 
         class="settings-switch w-12 h-7 rounded-full relative cursor-pointer transition-all duration-normal"

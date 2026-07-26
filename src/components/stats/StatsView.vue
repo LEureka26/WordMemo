@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import AchievementBadge from './AchievementBadge.vue'
+
 defineProps<{
   streak: number
   accuracy: number
   learnedCount: number
-  badges: string[]
+  badges: { id: string; name: string; unlocked: boolean; description?: string }[]
 }>()
 
 const stats = [
@@ -42,22 +44,15 @@ const stats = [
 
     <div class="badges-section">
       <h3 class="text-sm font-semibold text-text-primary mb-4">成就徽章</h3>
-      <div class="badges-grid flex flex-wrap gap-3">
-        <span 
-          v-for="badge in badges" 
-          :key="badge"
-          class="badge-item px-5 py-3 rounded-full text-sm font-medium transition-all duration-normal"
-          :class="true ? 'bg-gradient-to-r from-primary to-accent text-white shadow-[0_8px_24px_rgba(232,168,124,0.3)]' : 'bg-gray-100 text-text-muted'"
-        >
-          {{ badge }}
-        </span>
-        <span 
-          v-for="i in Math.max(0, 5 - badges.length)" 
-          :key="'empty-' + i"
-          class="badge-item px-5 py-3 rounded-full text-sm font-medium bg-gray-100 text-text-muted"
-        >
-          未解锁
-        </span>
+      <div class="badges-grid grid grid-cols-2 md:grid-cols-4 gap-3">
+        <AchievementBadge
+          v-for="badge in badges"
+          :key="badge.id"
+          :id="badge.id"
+          :name="badge.name"
+          :description="badge.description"
+          :unlocked="badge.unlocked"
+        />
       </div>
     </div>
   </div>

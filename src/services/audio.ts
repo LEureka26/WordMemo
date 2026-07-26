@@ -7,12 +7,15 @@ class AudioService {
   private pendingReject: ((reason: Error) => void) | null = null
 
   constructor() {
-    this.initVoices()
-    window.speechSynthesis.onvoiceschanged = () => this.initVoices()
-    this.startVoicePolling()
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      this.initVoices()
+      window.speechSynthesis.onvoiceschanged = () => this.initVoices()
+      this.startVoicePolling()
+    }
   }
 
   private initVoices() {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return
     const voices = window.speechSynthesis.getVoices()
     this.voices = voices.filter(v => v.lang.startsWith('en'))
   }
