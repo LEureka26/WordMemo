@@ -93,6 +93,8 @@ function backToLearn() {
           <QuizInput
             :word="quizStore.currentWord"
             :is-correct="quizStore.isCorrect"
+            :current-index="quizStore.currentIndex"
+            :total="quizStore.total"
             v-model:input="quizStore.userInput"
             @submit="handleSubmit"
             @skip="handleSkip"

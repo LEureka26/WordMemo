@@ -37,10 +37,6 @@ watch(() => props.isCorrect, (newVal) => {
       <div v-if="wordDetail" class="feedback-detail text-sm text-text-secondary mt-2">
         详细释义：{{ wordDetail }}
       </div>
-      <div class="flex gap-3 mt-4">
-        <button class="btn btn-outline" @click="emit('prev')">上一题</button>
-        <button class="btn btn-primary" @click="emit('next')">下一题</button>
-      </div>
     </div>
   </Transition>
 </template>

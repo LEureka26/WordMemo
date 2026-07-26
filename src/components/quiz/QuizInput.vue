@@ -6,6 +6,8 @@ const props = defineProps<{
   word: Word | null
   isCorrect: boolean | null
   input: string
+  currentIndex: number
+  total: number
 }>()
 
 const emit = defineEmits<{
@@ -78,8 +80,8 @@ function handleSkip() {
     <div class="quiz-actions flex gap-4">
       <button class="btn btn-outline" @click="handleSkip">跳过</button>
       <button class="btn btn-primary" @click="handleSubmit">提交</button>
-      <button v-if="isCorrect !== null" class="btn btn-outline" @click="emit('prev')">上一题</button>
-      <button v-if="isCorrect !== null" class="btn btn-primary" @click="emit('next')">下一题</button>
+      <button v-if="currentIndex > 0" class="btn btn-outline" @click="emit('prev')">上一题</button>
+      <button v-if="currentIndex < total - 1" class="btn btn-primary" @click="emit('next')">下一题</button>
     </div>
   </div>
 </template>
