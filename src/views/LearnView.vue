@@ -1,0 +1,146 @@
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import NavBar from '@/components/common/NavBar.vue'
+import SettingsPanel from '@/components/common/SettingsPanel.vue'
+import ShortcutHelp from '@/components/common/ShortcutHelp.vue'
+import StreakCard from '@/components/stats/StreakCard.vue'
+import WordCard from '@/components/learning/WordCard.vue'
+import ProgressBar from '@/components/learning/ProgressBar.vue'
+import WordList from '@/components/wordstore/WordList.vue'
+import { useLearningStore } from '@/stores/learningStore'
+import { useWordStore } from '@/stores/wordStore'
+import { useStatsStore } from '@/stores/statsStore'
+import { useSettingsStore } from '@/stores/settingsStore'
+import { audioService } from '@/services/audio'
+import { keyboardHandler } from '@/services/keyboard'
+
+const route = useRoute()
+const learningStore = useLearningStore()
+const wordStore = useWordStore()
+const statsStore = useStatsStore()
+const settingsStore = useSettingsStore()
+
+const showHelp = ref(false)
+const showAudioActivation = ref(false)
+
+onMounted(async () => {
+  if (!audioService.isActivated()) {
+    showAudioActivation.value = true
+  }
+  
+  learningStore.init(wordStore.activeGroup)
+  
+  keyboardHandler.setConfig({
+    onPrev: () => learningStore.prev(),
+    onNext: () => learningStore.next(),
+    onSpeak: () => learningStore.speakCurrentWord(),
+    onRateChange: (rate) => settingsStore.update('rate', rate),
+    onShowHelp: () => showHelp.value = true,
+  })
+})
+
+watch(() => wordStore.activeGroup, () => {
+  learningStore.init(wordStore.activeGroup)
+})
+
+function handleActivateAudio() {
+  audioService.activate()
+  showAudioActivation.value = false
+  learningStore.speakCurrentWord()
+}
+
+function handleSelectWord(word: { id: string }) {
+  const index = learningStore.words.findIndex(w => w.id === word.id)
+  if (index !== -1) {
+    learningStore.currentIndex = index
+    learningStore.showChinese = false
+    learningStore.speakCurrentWord()
+  }
+}
+</script>
+
+<template>
+  <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
+    <NavBar :current-route="route.name || ''" />
+
+    <div class="layout-desktop flex gap-6 flex-1">
+      <aside class="desktop-sidebar w-[280px] flex-shrink-0 flex flex-col gap-5 hidden md:flex">
+        <StreakCard :streak="statsStore.streak.count" />
+
+        <div class="stats-grid grid grid-cols-2 gap-4">
+          <div class="stat-card bg-warm-card rounded-lg p-4 text-center shadow-sm border border-primary/10">
+            <div class="stat-icon streak bg-gradient-to-r from-primary to-accent text-white w-10 h-10 mx-auto mb-2 text-sm">🔥</div>
+            <div class="stat-value text-xl font-extrabold text-text-primary">{{ wordStore.learnedCount }}</div>
+            <div class="stat-label text-[10px] uppercase tracking-wider text-text-muted">已学词数</div>
+          </div>
+          <div class="stat-card bg-warm-card rounded-lg p-4 text-center shadow-sm border border-primary/10">
+            <div class="stat-icon correct bg-success/15 text-[#2E7D58] w-10 h-10 mx-auto mb-2 text-sm">✓</div>
+            <div class="stat-value text-xl font-extrabold text-text-primary">{{ statsStore.accuracy }}%</div>
+            <div class="stat-label text-[10px] uppercase tracking-wider text-text-muted">正确率</div>
+          </div>
+        </div>
+
+        <SettingsPanel />
+
+        <div class="card">
+          <div class="card-header flex justify-between items-start mb-4">
+            <div>
+              <div class="card-title text-sm font-bold text-text-primary">单词列表</div>
+              <div class="card-subtitle text-xs text-text-muted">{{ wordStore.activeGroup }} · {{ learningStore.total }}词</div>
+            </div>
+            <span class="pill pill-secondary text-xs">学习中</span>
+          </div>
+          <WordList 
+            :words="learningStore.words" 
+            :active-word-id="learningStore.currentWord?.id"
+            @select="handleSelectWord"
+          />
+        </div>
+      </aside>
+
+      <main class="main-content flex-1 flex flex-col gap-6 pb-24 md:pb-6">
+        <WordCard
+          :word="learningStore.currentWord"
+          :show-chinese="learningStore.showChinese"
+          :is-speaking="learningStore.isSpeaking"
+          @speak="learningStore.speakCurrentWord"
+          @toggle-chinese="learningStore.toggleShowChinese"
+          @mark-learned="learningStore.markAsLearned"
+          @next="learningStore.next"
+          @prev="learningStore.prev"
+          @up="learningStore.markAsLearned"
+        />
+
+        <ProgressBar
+          :progress="learningStore.progress"
+          :current="learningStore.currentNumber"
+          :total="learningStore.total"
+        />
+      </main>
+    </div>
+
+    <ShortcutHelp :visible="showHelp" @close="showHelp = false" />
+
+    <Teleport to="body">
+      <div 
+        v-if="showAudioActivation"
+        class="fixed inset-0 bg-black/60 flex items-center justify-center z-[200]"
+      >
+        <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center shadow-2xl">
+          <div class="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white text-2xl mb-4">
+            🔊
+          </div>
+          <h3 class="text-xl font-bold text-text-primary mb-2">开始学习</h3>
+          <p class="text-text-secondary mb-6">点击下方按钮激活语音功能，开启你的学习之旅</p>
+          <button 
+            class="btn-primary w-full py-4"
+            @click="handleActivateAudio"
+          >
+            开始学习
+          </button>
+        </div>
+      </div>
+    </Teleport>
+  </div>
+</template>

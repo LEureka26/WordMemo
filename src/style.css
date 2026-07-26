@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .border-primary-12 {
+    border-color: rgba(232, 168, 124, 0.12);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(180deg, #FFF8F0 0%, #FFF3E6 50%, #FFFAF5 100%);
+  color: #3D2914;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(232, 168, 124, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(232, 168, 124, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(232, 168, 124, 0.6);
+}
+
+@layer components {
+  .card {
+    @apply bg-warm-card rounded-lg p-7 shadow-md border border-primary-12 transition-all duration-normal hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .word-card {
+    @apply bg-gradient-to-br from-white to-[#FFFDFB] rounded-xl p-10 shadow-[0_20px_60px_rgba(232,168,124,0.12)] border border-primary/15 relative overflow-hidden;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-accent text-white font-semibold rounded-md px-6 py-5 shadow-[0_8px_24px_rgba(232,168,124,0.3)] transition-all duration-normal hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(232,168,124,0.4)];
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-text-secondary font-semibold rounded-md px-6 py-5 border-2 border-primary/30 transition-all duration-normal hover:border-primary hover:text-primary hover:bg-primary/5;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary/15 text-[#2E7D58] font-semibold rounded-md px-6 py-5 transition-all duration-normal hover:bg-secondary/25;
+  }
+
+  .pill {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-sm font-medium;
+  }
+
+  .pill-primary {
+    @apply bg-gradient-to-r from-primary to-accent text-white;
+  }
+
+  .pill-secondary {
+    @apply bg-secondary/15 text-[#2E7D58];
+  }
+
+  .pill-warning {
+    @apply bg-warning/20 text-[#8B7300];
+  }
+
+  .progress-bar {
+    @apply h-3 bg-primary/15 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-slow;
+  }
+
+  .stat-icon {
+    @apply w-14 h-14 rounded-lg flex items-center justify-center text-xl mx-auto mb-4;
+  }
+
+  .streak-card {
+    @apply bg-gradient-to-r from-primary to-accent rounded-xl p-8 text-white shadow-[0_20px_60px_rgba(232,168,124,0.35)] text-center;
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WordMemo Sunlit Cards 设计稿</title>
+  <link rel="stylesheet" href="design-v3.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">W</span>
+        <div>
+          <p class="eyebrow">WordMemo</p>
+          <h1>阳光卡片 · 双端学习</h1>
+        </div>
+      </div>
+      <nav class="topnav" aria-label="主导航">
+        <a href="#learn">学习</a>
+        <a href="#quiz">默写</a>
+        <a href="#wordbook">词库</a>
+        <a href="#stats">统计</a>
+      </nav>
+    </header>
+
+    <main class="layout-grid">
+      <section class="panel panel-card panel-summary">
+        <div class="panel-title">
+          <span>今日学习目标</span>
+          <strong>8 / 20 单词</strong>
+        </div>
+        <div class="summary-list">
+          <div class="summary-item">
+            <span>连击</span>
+            <strong>5 天</strong>
+          </div>
+          <div class="summary-item">
+            <span>错题</span>
+            <strong>3 个</strong>
+          </div>
+          <div class="summary-item">
+            <span>难词</span>
+            <strong>2 个</strong>
+          </div>
+        </div>
+        <div class="pill-row">
+          <span class="pill">已激活语速 1.0</span>
+          <span class="pill pill-soft">自动发音</span>
+        </div>
+      </section>
+
+      <section class="panel panel-card panel-main" id="learn">
+        <div class="card-hero">
+          <div class="highlight-stripe"></div>
+          <div class="card-meta">
+            <span class="tag">学习卡片</span>
+            <span class="badge">当前组：四级基础</span>
+          </div>
+          <div class="word-header">
+            <div>
+              <p class="word-label">单词</p>
+              <h2>glisten</h2>
+            </div>
+            <button class="audio-btn" type="button">发音</button>
+          </div>
+          <p class="pronounce">/ˈɡlɪsən/</p>
+          <div class="definition-card">
+            <p>to shine with a soft reflected light; to give a gentle sparkle.</p>
+          </div>
+          <div class="action-row">
+            <button class="btn btn-primary">显示释义</button>
+            <button class="btn btn-outline">标记为已掌握</button>
+          </div>
+          <div class="card-footer">
+            <span>正在学习：第 7 / 20 题</span>
+            <div class="progress-bar" aria-hidden="true">
+              <div style="width: 35%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel panel-card panel-quiz" id="quiz">
+        <div class="panel-title">
+          <span>默写练习</span>
+          <strong>看英文写中文</strong>
+        </div>
+        <div class="quiz-card">
+          <p class="quiz-word">glisten</p>
+          <label class="input-group">
+            <span>你的答案</span>
+            <input type="text" placeholder="输入中文释义" />
+          </label>
+          <div class="quiz-actions">
+            <button class="btn btn-primary">提交</button>
+            <button class="btn btn-soft">跳过</button>
+          </div>
+          <p class="hint-text">支持多义词匹配，输入“闪光”或“闪烁”都可。</p>
+        </div>
+      </section>
+
+      <section class="panel panel-card panel-stats" id="stats">
+        <div class="panel-title">
+          <span>学习统计</span>
+          <strong>坚持与复习</strong>
+        </div>
+        <div class="stats-list">
+          <div class="stats-item">
+            <span>已学词数</span>
+            <strong>142</strong>
+          </div>
+          <div class="stats-item">
+            <span>本周正确率</span>
+            <strong>92%</strong>
+          </div>
+          <div class="stats-item">
+            <span>今日打卡</span>
+            <strong>完成</strong>
+          </div>
+        </div>
+        <div class="badge-panel">
+          <strong>徽章</strong>
+          <div class="badge-list">
+            <span class="badge-pill">首日打卡</span>
+            <span class="badge-pill">默写全对</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>WordMemo - 暖色学习氛围设计</title>
+  <style>
+    :root {
+      --color-primary: #E8A87C;
+      --color-primary-dark: #D4956A;
+      --color-secondary: #85D3B2;
+      --color-accent: #F9D5A7;
+      --color-accent-light: #FEF3E2;
+      --color-warm-bg: #FFF8F0;
+      --color-warm-card: #FFFFFF;
+      --color-text-primary: #3D2914;
+      --color-text-secondary: #6B5A42;
+      --color-text-muted: #9A8B78;
+      --color-success: #6BCB77;
+      --color-error: #FF6B6B;
+      --color-warning: #FFD93D;
+      --color-shadow: rgba(232, 168, 124, 0.15);
+      --color-shadow-hover: rgba(232, 168, 124, 0.25);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-xl: 36px;
+      --shadow-sm: 0 4px 16px var(--color-shadow);
+      --shadow-md: 0 8px 32px var(--color-shadow);
+      --shadow-lg: 0 16px 48px var(--color-shadow);
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.25s ease;
+      --transition-slow: 0.4s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(180deg, #FFF8F0 0%, #FFF3E6 50%, #FFFAF5 100%);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .app-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .desktop-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      margin-bottom: 24px;
+    }
+
+    .mobile-header {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: 0 8px 24px rgba(232, 168, 124, 0.3);
+    }
+
+    .logo-text h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-item {
+      padding: 12px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+      font-size: 0.92rem;
+      transition: all var(--transition-normal);
+      position: relative;
+    }
+
+    .nav-item:hover {
+      background: var(--color-accent-light);
+      color: var(--color-text-primary);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+      box-shadow: 0 8px 24px rgba(232, 168, 124, 0.3);
+    }
+
+    .desktop-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .mobile-sidebar {
+      display: none;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--color-warm-card);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(232, 168, 124, 0.12);
+      transition: all var(--transition-normal);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .card-subtitle {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .pill-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+    }
+
+    .pill-secondary {
+      background: rgba(133, 211, 178, 0.15);
+      color: #2E7D58;
+    }
+
+    .pill-warning {
+      background: rgba(255, 217, 61, 0.2);
+      color: #8B7300;
+    }
+
+    .word-card {
+      background: linear-gradient(145deg, #FFFFFF 0%, #FFFDFB 100%);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(232, 168, 124, 0.12);
+      border: 1px solid rgba(232, 168, 124, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .word-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(232, 168, 124, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .word-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      left: -40px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(133, 211, 178, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .word-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .word-info h2 {
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--color-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .word-info .pronunciation {
+      font-size: 1.2rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .audio-button {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 32px rgba(232, 168, 124, 0.35);
+      transition: all var(--transition-normal);
+    }
+
+    .audio-button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 16px 40px rgba(232, 168, 124, 0.45);
+    }
+
+    .audio-button:active {
+      transform: scale(0.95);
+    }
+
+    .definition-box {
+      background: var(--color-accent-light);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .definition-box h3 {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+
+    .definition-box p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--color-text-primary);
+    }
+
+    .chinese-hint {
+      background: rgba(133, 211, 178, 0.1);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .chinese-hint h3 {
+      font-size: 0.85rem;
+      color: #2E7D58;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .chinese-hint p {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .word-actions {
+      display: flex;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 18px 24px;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+      box-shadow: 0 8px 24px rgba(232, 168, 124, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(232, 168, 124, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-text-secondary);
+      border: 2px solid rgba(232, 168, 124, 0.3);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: rgba(232, 168, 124, 0.05);
+    }
+
+    .btn-secondary {
+      background: rgba(133, 211, 178, 0.15);
+      color: #2E7D58;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(133, 211, 178, 0.25);
+    }
+
+    .progress-section {
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .progress-text {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    .progress-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(232, 168, 124, 0.15);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+      border-radius: 999px;
+      transition: width var(--transition-slow);
+      width: 35%;
+    }
+
+    .quiz-section {
+      background: linear-gradient(145deg, #FFFFFF 0%, #FFFDFB 100%);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(232, 168, 124, 0.12);
+      border: 1px solid rgba(232, 168, 124, 0.15);
+    }
+
+    .quiz-word-display {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .quiz-word-display h2 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .quiz-word-display p {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .quiz-input-group {
+      margin-bottom: 24px;
+    }
+
+    .quiz-input-label {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .quiz-input {
+      width: 100%;
+      padding: 20px 24px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(232, 168, 124, 0.2);
+      font-size: 1.2rem;
+      color: var(--color-text-primary);
+      background: rgba(255, 255, 255, 0.8);
+      transition: all var(--transition-normal);
+    }
+
+    .quiz-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(232, 168, 124, 0.1);
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .quiz-feedback {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      display: none;
+    }
+
+    .quiz-feedback.correct {
+      display: block;
+      background: rgba(107, 203, 119, 0.15);
+      border-left: 4px solid var(--color-success);
+    }
+
+    .quiz-feedback.wrong {
+      display: block;
+      background: rgba(255, 107, 107, 0.15);
+      border-left: 4px solid var(--color-error);
+    }
+
+    .feedback-icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .feedback-text {
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+
+    .feedback-detail {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-top: 8px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--color-warm-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(232, 168, 124, 0.1);
+      transition: all var(--transition-normal);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .stat-icon.streak {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+    }
+
+    .stat-icon.correct {
+      background: rgba(107, 203, 119, 0.15);
+      color: #2E7D58;
+    }
+
+    .stat-icon.total {
+      background: rgba(133, 211, 178, 0.15);
+      color: #2E7D58;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .streak-card {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      color: white;
+      box-shadow: 0 20px 60px rgba(232, 168, 124, 0.35);
+      text-align: center;
+    }
+
+    .streak-card h3 {
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+
+    .streak-number {
+      font-size: 4.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .streak-label {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .badges-section {
+      margin-top: 24px;
+    }
+
+    .badges-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .badge-item {
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all var(--transition-normal);
+    }
+
+    .badge-item.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+      box-shadow: 0 8px 24px rgba(232, 168, 124, 0.3);
+    }
+
+    .badge-item.inactive {
+      background: rgba(200, 190, 180, 0.15);
+      color: var(--color-text-muted);
+    }
+
+    .word-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .word-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--color-warm-card);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(232, 168, 124, 0.1);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .word-item:hover {
+      background: var(--color-accent-light);
+      transform: translateX(4px);
+    }
+
+    .word-item.active {
+      border-color: var(--color-primary);
+      background: rgba(232, 168, 124, 0.08);
+    }
+
+    .word-item-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .word-item-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .word-item-status.learned {
+      background: var(--color-success);
+    }
+
+    .word-item-status.learning {
+      background: var(--color-warning);
+    }
+
+    .word-item-status.new {
+      background: var(--color-text-muted);
+    }
+
+    .word-item-english {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-text-primary);
+    }
+
+    .word-item-chinese {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-left: 8px;
+    }
+
+    .word-item-meta {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    .group-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .group-tab {
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      background: rgba(232, 168, 124, 0.1);
+      color: var(--color-text-secondary);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .group-tab:hover {
+      background: rgba(232, 168, 124, 0.2);
+    }
+
+    .group-tab.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      font-size: 1rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(232, 168, 124, 0.2);
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all var(--transition-normal);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(232, 168, 124, 0.1);
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 12px 0;
+      box-shadow: 0 -8px 32px rgba(232, 168, 124, 0.1);
+      border-top: 1px solid rgba(232, 168, 124, 0.1);
+      z-index: 1000;
+    }
+
+    .mobile-nav-items {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--color-text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 16px;
+      transition: all var(--transition-normal);
+    }
+
+    .mobile-nav-item.active {
+      color: var(--color-primary);
+      background: var(--color-accent-light);
+    }
+
+    .mobile-nav-icon {
+      font-size: 1.4rem;
+    }
+
+    .settings-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: var(--color-warm-card);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(232, 168, 124, 0.1);
+      margin-bottom: 16px;
+      transition: all var(--transition-normal);
+    }
+
+    .settings-toggle:hover {
+      background: var(--color-accent-light);
+    }
+
+    .settings-label {
+      flex: 1;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    .settings-switch {
+      width: 48px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(232, 168, 124, 0.2);
+      position: relative;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .settings-switch.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    }
+
+    .settings-switch::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all var(--transition-normal);
+    }
+
+    .settings-switch.active::after {
+      left: 24px;
+    }
+
+    .speed-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      background: var(--color-warm-card);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(232, 168, 124, 0.1);
+    }
+
+    .speed-label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      width: 60px;
+    }
+
+    .speed-buttons {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .speed-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(232, 168, 124, 0.2);
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: white;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .speed-btn.active {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: white;
+      border-color: transparent;
+    }
+
+    .layout-desktop {
+      display: flex;
+      gap: 24px;
+      flex: 1;
+    }
+
+    @media (max-width: 1024px) {
+      .layout-desktop {
+        flex-direction: column;
+      }
+
+      .desktop-sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .streak-card {
+        width: calc(50% - 10px);
+      }
+
+      .stats-grid {
+        width: calc(50% - 10px);
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .word-list {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        padding: 0 16px;
+      }
+
+      .desktop-header {
+        display: none;
+      }
+
+      .mobile-header {
+        display: flex;
+      }
+
+      .desktop-nav {
+        display: none;
+      }
+
+      .desktop-sidebar {
+        display: none;
+      }
+
+      .mobile-bottom-nav {
+        display: block;
+      }
+
+      .main-content {
+        padding-bottom: 100px;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: var(--radius-md);
+      }
+
+      .word-card {
+        padding: 28px 20px;
+        border-radius: var(--radius-lg);
+      }
+
+      .word-info h2 {
+        font-size: 2.5rem;
+      }
+
+      .word-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .audio-button {
+        width: 56px;
+        height: 56px;
+        font-size: 0.9rem;
+      }
+
+      .definition-box {
+        padding: 20px;
+      }
+
+      .definition-box p {
+        font-size: 1rem;
+      }
+
+      .word-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        padding: 16px 20px;
+      }
+
+      .quiz-word-display h2 {
+        font-size: 2.5rem;
+      }
+
+      .quiz-input {
+        padding: 16px 20px;
+        font-size: 1.1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+      }
+
+      .streak-number {
+        font-size: 3.5rem;
+      }
+
+      .group-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        scrollbar-width: none;
+      }
+
+      .group-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .search-input {
+        padding: 14px 16px 14px 44px;
+      }
+
+      .word-item {
+        padding: 14px 16px;
+      }
+
+      .word-item-content {
+        gap: 10px;
+      }
+
+      .word-item-chinese {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .word-info h2 {
+        font-size: 2rem;
+      }
+
+      .definition-box p {
+        font-size: 0.95rem;
+      }
+
+      .chinese-hint p {
+        font-size: 1.1rem;
+      }
+
+      .quiz-word-display h2 {
+        font-size: 2rem;
+      }
+
+      .streak-number {
+        font-size: 3rem;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="desktop-header">
+      <div class="logo">
+        <div class="logo-icon">W</div>
+        <div class="logo-text">
+          <h1>WordMemo</h1>
+          <p>阳光学习</p>
+        </div>
+      </div>
+      <nav class="desktop-nav">
+        <a href="#learn" class="nav-item active">学习</a>
+        <a href="#quiz" class="nav-item">默写</a>
+        <a href="#wordbook" class="nav-item">词库</a>
+        <a href="#stats" class="nav-item">统计</a>
+      </nav>
+    </header>
+
+    <header class="mobile-header">
+      <div class="logo">
+        <div class="logo-icon">W</div>
+        <div class="logo-text">
+          <h1>WordMemo</h1>
+          <p>阳光学习</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout-desktop">
+      <aside class="desktop-sidebar">
+        <div class="streak-card">
+          <h3>连续打卡</h3>
+          <div class="streak-number">5</div>
+          <div class="streak-label">天</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon streak">🔥</div>
+            <div class="stat-value">142</div>
+            <div class="stat-label">已学词数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon correct">✓</div>
+            <div class="stat-value">92%</div>
+            <div class="stat-label">正确率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon total">📚</div>
+            <div class="stat-value">20</div>
+            <div class="stat-label">今日目标</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">设置</div>
+              <div class="card-subtitle">学习偏好</div>
+            </div>
+          </div>
+
+          <div class="settings-toggle">
+            <span class="settings-label">自动发音</span>
+            <div class="settings-switch active"></div>
+          </div>
+
+          <div class="settings-toggle">
+            <span class="settings-label">显示中文</span>
+            <div class="settings-switch"></div>
+          </div>
+
+          <div class="settings-toggle">
+            <span class="settings-label">模糊匹配</span>
+            <div class="settings-switch"></div>
+          </div>
+
+          <div class="speed-control">
+            <span class="speed-label">语速</span>
+            <div class="speed-buttons">
+              <button class="speed-btn">慢</button>
+              <button class="speed-btn active">正常</button>
+              <button class="speed-btn">快</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">单词列表</div>
+              <div class="card-subtitle">四级基础 · 20词</div>
+            </div>
+            <span class="pill pill-secondary">学习中</span>
+          </div>
+
+          <div class="word-list">
+            <div class="word-item active">
+              <div class="word-item-content">
+                <span class="word-item-status learning"></span>
+                <span class="word-item-english">glisten</span>
+                <span class="word-item-chinese">闪光</span>
+              </div>
+              <span class="word-item-meta">7/20</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learned"></span>
+                <span class="word-item-english">brilliant</span>
+                <span class="word-item-chinese">杰出的</span>
+              </div>
+              <span class="word-item-meta">✓</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learned"></span>
+                <span class="word-item-english">radiant</span>
+                <span class="word-item-chinese">光芒四射的</span>
+              </div>
+              <span class="word-item-meta">✓</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status new"></span>
+                <span class="word-item-english">luminous</span>
+                <span class="word-item-chinese">发光的</span>
+              </div>
+              <span class="word-item-meta">-</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status new"></span>
+                <span class="word-item-english">sparkle</span>
+                <span class="word-item-chinese">闪耀</span>
+              </div>
+              <span class="word-item-meta">-</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section id="learn" class="word-card">
+          <div class="word-header">
+            <div class="word-info">
+              <h2>glisten</h2>
+              <div class="pronunciation">/ˈɡlɪsən/</div>
+            </div>
+            <button class="audio-button">🔊</button>
+          </div>
+
+          <div class="definition-box">
+            <h3>English Definition</h3>
+            <p>to shine with a soft reflected light; to give a gentle sparkle, especially with light reflecting off a wet or glossy surface.</p>
+          </div>
+
+          <div class="chinese-hint">
+            <h3>中文释义</h3>
+            <p>闪闪发光；闪烁</p>
+          </div>
+
+          <div class="word-actions">
+            <button class="btn btn-outline">标记已掌握</button>
+            <button class="btn btn-primary">下一个</button>
+          </div>
+
+          <div class="progress-section">
+            <div class="progress-header">
+              <span class="progress-text">学习进度</span>
+              <span class="progress-value">第 7 / 20 题</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="quiz" class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">默写练习</div>
+              <div class="card-subtitle">看英文写中文</div>
+            </div>
+            <span class="pill pill-primary">进行中</span>
+          </div>
+
+          <div class="quiz-section">
+            <div class="quiz-word-display">
+              <h2>glisten</h2>
+              <p>/ˈɡlɪsən/</p>
+            </div>
+
+            <div class="quiz-input-group">
+              <label class="quiz-input-label">你的答案</label>
+              <input type="text" class="quiz-input" placeholder="输入中文释义" />
+            </div>
+
+            <div class="quiz-actions">
+              <button class="btn btn-outline">跳过</button>
+              <button class="btn btn-primary">提交</button>
+            </div>
+
+            <div class="quiz-feedback correct">
+              <div class="feedback-icon">✓</div>
+              <div class="feedback-text">回答正确！</div>
+              <div class="feedback-detail">正确答案：闪闪发光；闪烁</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="wordbook" class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">词库管理</div>
+              <div class="card-subtitle">四级基础 · 500词</div>
+            </div>
+            <span class="pill pill-warning">错题 3个</span>
+          </div>
+
+          <div class="group-tabs">
+            <button class="group-tab active">四级基础</button>
+            <button class="group-tab">托福核心</button>
+            <button class="group-tab">自定义</button>
+            <button class="group-tab">难词本</button>
+          </div>
+
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="搜索单词..." />
+          </div>
+
+          <div class="word-list">
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learned"></span>
+                <span class="word-item-english">abundant</span>
+                <span class="word-item-chinese">丰富的</span>
+              </div>
+              <span class="word-item-meta">3/0</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learning"></span>
+                <span class="word-item-english">brilliant</span>
+                <span class="word-item-chinese">杰出的</span>
+              </div>
+              <span class="word-item-meta">2/1</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status new"></span>
+                <span class="word-item-english">comprehensive</span>
+                <span class="word-item-chinese">综合的</span>
+              </div>
+              <span class="word-item-meta">0/0</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learned"></span>
+                <span class="word-item-english">diligent</span>
+                <span class="word-item-chinese">勤奋的</span>
+              </div>
+              <span class="word-item-meta">5/0</span>
+            </div>
+            <div class="word-item">
+              <div class="word-item-content">
+                <span class="word-item-status learning"></span>
+                <span class="word-item-english">eloquent</span>
+                <span class="word-item-chinese">雄辩的</span>
+              </div>
+              <span class="word-item-meta">1/2</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="stats" class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">学习统计</div>
+              <div class="card-subtitle">坚持与成长</div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon streak">🔥</div>
+              <div class="stat-value">5</div>
+              <div class="stat-label">连续打卡</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon correct">✓</div>
+              <div class="stat-value">92%</div>
+              <div class="stat-label">本周正确率</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon total">📚</div>
+              <div class="stat-value">142</div>
+              <div class="stat-label">累计学习</div>
+            </div>
+          </div>
+
+          <div class="badges-section">
+            <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--color-text-primary); margin-bottom: 8px;">成就徽章</h3>
+            <div class="badges-grid">
+              <span class="badge-item active">首日打卡</span>
+              <span class="badge-item active">默写全对</span>
+              <span class="badge-item active">连续7天</span>
+              <span class="badge-item inactive">百词达人</span>
+              <span class="badge-item inactive">完美一周</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-bottom-nav">
+      <div class="mobile-nav-items">
+        <a href="#learn" class="mobile-nav-item active">
+          <span class="mobile-nav-icon">📖</span>
+          <span>学习</span>
+        </a>
+        <a href="#quiz" class="mobile-nav-item">
+          <span class="mobile-nav-icon">✏️</span>
+          <span>默写</span>
+        </a>
+        <a href="#wordbook" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📚</span>
+          <span>词库</span>
+        </a>
+        <a href="#stats" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📊</span>
+          <span>统计</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</body>
+</html>
