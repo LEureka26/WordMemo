@@ -7,12 +7,6 @@ defineProps<{
   learnedCount: number
   badges: { id: string; name: string; unlocked: boolean; description?: string }[]
 }>()
-
-const stats = [
-  { icon: '🔥', label: '连续打卡', key: 'streak' },
-  { icon: '✓', label: '正确率', key: 'accuracy' },
-  { icon: '📚', label: '累计学习', key: 'learned' },
-]
 </script>
 
 <template>

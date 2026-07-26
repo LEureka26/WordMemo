@@ -35,34 +35,26 @@ onMounted(() => {
   }
 })
 
-watch(() => props.word, async (newWord) => {
-  if (newWord && audioService.isActivated() && audioService.isSupported() && settingsStore.settings.autoPlay) {
+watch(() => props.word?.id, (id) => {
+  if (id && audioService.isActivated() && audioService.isSupported() && settingsStore.settings.autoPlay) {
     emit('speak')
   }
 })
 
 function handleSpeak() {
   audioError.value = ''
-  
+
   if (!audioService.isSupported()) {
     audioError.value = '当前浏览器不支持语音合成'
     return
   }
-  
+
   if (!audioService.isActivated()) {
     audioError.value = '请先点击"开始学习"激活语音功能'
     return
   }
-  
-  if (!audioService.hasVoices()) {
-    audioError.value = '未检测到可用的英语语音包'
-  }
-  
-  emit('speak')
-}
 
-function handleToggleChinese() {
-  emit('toggleChinese')
+  emit('speak')
 }
 
 function handleMarkLearned() {

@@ -7,7 +7,6 @@ import ShortcutHelp from '@/components/common/ShortcutHelp.vue'
 import StreakCard from '@/components/stats/StreakCard.vue'
 import WordCard from '@/components/learning/WordCard.vue'
 import ProgressBar from '@/components/learning/ProgressBar.vue'
-import WordList from '@/components/wordstore/WordList.vue'
 import { useLearningStore } from '@/stores/learningStore'
 import { useWordStore } from '@/stores/wordStore'
 import { useStatsStore } from '@/stores/statsStore'
@@ -55,14 +54,19 @@ function handleSelectWord(word: { id: string }) {
   if (index !== -1) {
     learningStore.currentIndex = index
     learningStore.showChinese = false
-    learningStore.speakCurrentWord()
   }
+}
+
+function getStatusClass(word: { learned: boolean; wrong: number }): string {
+  if (word.learned) return 'learned'
+  if (word.wrong > 0) return 'learning'
+  return 'new'
 }
 </script>
 
 <template>
   <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
-    <NavBar :current-route="route.name || ''" />
+    <NavBar :current-route="typeof route.name === 'string' ? route.name : ''" />
 
     <div class="layout-desktop flex gap-6 flex-1">
       <aside class="desktop-sidebar w-[280px] flex-shrink-0 flex flex-col gap-5 hidden md:flex">
@@ -91,13 +95,30 @@ function handleSelectWord(word: { id: string }) {
             </div>
             <span class="pill pill-secondary text-xs">学习中</span>
           </div>
-          <WordList 
-            :words="learningStore.words" 
-            :active-word-id="learningStore.currentWord?.id"
-            :show-checkbox="false"
-            :max-visible="5"
-            @select="handleSelectWord"
-          />
+          <div class="learn-word-list overflow-y-auto overflow-x-hidden space-y-3">
+            <div
+              v-for="word in learningStore.words"
+              :key="word.id"
+              class="word-item flex items-center justify-between p-4 bg-warm-card rounded-md border border-primary/10 transition-all duration-normal cursor-pointer hover:bg-accent-light hover:translate-x-1"
+              :class="{ 'border-primary bg-primary/5': learningStore.currentWord?.id === word.id }"
+              @click="handleSelectWord(word)"
+            >
+              <div class="word-item-content flex items-center gap-3.5 min-w-0">
+                <span
+                  class="word-item-status w-2.5 h-2.5 rounded-full flex-shrink-0"
+                  :class="getStatusClass(word)"
+                ></span>
+                <span class="word-item-english font-semibold text-sm text-text-primary truncate">{{ word.english }}</span>
+                <span class="word-item-chinese text-xs text-text-muted truncate hidden md:inline">{{ word.chinese[0] }}</span>
+              </div>
+              <span class="word-item-meta text-xs text-text-muted flex-shrink-0 ml-2">
+                {{ word.correct }}/{{ word.wrong }}
+              </span>
+            </div>
+            <div v-if="learningStore.words.length === 0" class="text-center py-8 text-text-muted">
+              暂无单词
+            </div>
+          </div>
           <div v-if="learningStore.words.length > 5" class="text-center text-xs text-text-muted mt-2">
             共 {{ learningStore.words.length }} 个单词，滚动查看更多
           </div>
@@ -149,3 +170,26 @@ function handleSelectWord(word: { id: string }) {
     </Teleport>
   </div>
 </template>
+
+<style scoped>
+.learn-word-list {
+  max-height: calc(5 * 3.75rem + 4 * 0.75rem);
+  scrollbar-width: thin;
+}
+.learn-word-list::-webkit-scrollbar {
+  width: 4px;
+}
+.learn-word-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+.word-item-status.learned {
+  background: var(--color-success, #4CAF7D);
+}
+.word-item-status.learning {
+  background: var(--color-warning, #E6A817);
+}
+.word-item-status.new {
+  background: #c4c4c4;
+}
+</style>

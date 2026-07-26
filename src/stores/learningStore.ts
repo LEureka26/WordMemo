@@ -40,7 +40,6 @@ export const useLearningStore = defineStore('learning', () => {
     if (currentIndex.value < words.value.length - 1) {
       currentIndex.value++
       showChinese.value = false
-      await speakCurrentWord()
     }
   }
 
@@ -48,7 +47,6 @@ export const useLearningStore = defineStore('learning', () => {
     if (currentIndex.value > 0) {
       currentIndex.value--
       showChinese.value = false
-      await speakCurrentWord()
     }
   }
 

@@ -1,8 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useStatsStore } from '@/stores/statsStore'
-import * as storage from '@/services/storage'
-import * as date from '@/utils/date'
 
 vi.mock('@/services/storage', () => ({
   getStreak: vi.fn(() => Promise.resolve({ lastDate: '', count: 0, badges: [] })),

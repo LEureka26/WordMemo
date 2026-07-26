@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useQuizStore } from '@/stores/quizStore'
 import { useWordStore } from '@/stores/wordStore'
-import * as storage from '@/services/storage'
 
 vi.mock('@/services/storage', () => ({
   incrementWordCorrect: vi.fn(),
