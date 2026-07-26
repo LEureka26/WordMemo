@@ -111,18 +111,7 @@ function handlePrev() {
       </p>
     </div>
 
-    <div class="definition-box bg-accent-light rounded-lg p-7 mb-6 relative z-10 border-l-4 border-primary">
-      <h3 class="text-xs uppercase tracking-widest text-text-muted mb-3">English Definition</h3>
-      <p class="text-base leading-relaxed text-text-primary">
-        A word that means something wonderful and amazing in English.
-      </p>
-    </div>
-
-    <div 
-      class="chinese-hint bg-secondary/10 rounded-md p-5 mb-6 relative z-10"
-      :class="{ 'opacity-0 pointer-events-none': !showChinese }"
-      @click.stop="handleToggleChinese"
-    >
+    <div class="chinese-hint bg-secondary/10 rounded-md p-5 mb-6 relative z-10">
       <h3 class="text-xs uppercase tracking-wider text-[#2E7D58] mb-2">中文释义</h3>
       <p class="text-xl font-semibold text-text-primary">
         {{ word?.chinese?.join('；') || '-' }}
