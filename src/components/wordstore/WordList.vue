@@ -5,6 +5,8 @@ import type { Word } from '@/types'
 const props = defineProps<{
   words: Word[]
   activeWordId?: string
+  showCheckbox?: boolean
+  maxVisible?: number
 }>()
 
 const emit = defineEmits<{
@@ -20,6 +22,10 @@ const isAllSelected = computed(() => {
 
 const isIndeterminate = computed(() => {
   return selectedIds.value.length > 0 && selectedIds.value.length < props.words.length
+})
+
+const visibleWords = computed(() => {
+  return props.words
 })
 
 function toggleSelectAll() {
@@ -63,9 +69,9 @@ function getStatusLabel(word: Word): string {
 </script>
 
 <template>
-  <div class="word-list space-y-3">
+  <div class="word-list space-y-3" :class="{ 'max-h-[300px] overflow-y-auto overflow-x-hidden pr-1': maxVisible }">
     <!-- 批量操作栏 -->
-    <div v-if="words.length > 0" class="flex items-center gap-3 p-3 bg-accent-light rounded-md">
+    <div v-if="showCheckbox && words.length > 0" class="flex items-center gap-3 p-3 bg-accent-light rounded-md">
       <label class="checkbox-wrapper flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
@@ -82,14 +88,14 @@ function getStatusLabel(word: Word): string {
     </div>
 
     <div
-      v-for="word in words"
+      v-for="word in visibleWords"
       :key="word.id"
       class="word-item flex items-center justify-between p-4 bg-warm-card rounded-md border border-primary/10 transition-all duration-normal cursor-pointer hover:bg-accent-light hover:translate-x-1"
       :class="{ 'border-primary bg-primary/5': activeWordId === word.id }"
       @click="handleRowClick(word, $event)"
     >
       <div class="word-item-content flex items-center gap-3.5">
-        <label class="checkbox-wrapper flex items-center cursor-pointer" @click.stop>
+        <label v-if="showCheckbox" class="checkbox-wrapper flex items-center cursor-pointer" @click.stop>
           <input
             type="checkbox"
             :checked="selectedIds.includes(word.id)"

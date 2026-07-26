@@ -19,7 +19,7 @@ const emit = defineEmits<{
       class="group-tab-wrapper relative"
     >
       <button
-        class="group-tab px-4.5 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-text-secondary border-none cursor-pointer transition-all duration-normal hover:bg-primary/20"
+        class="group-tab px-5 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-text-secondary border-none cursor-pointer transition-all duration-normal hover:bg-primary/20"
         :class="activeGroup === group ? 'bg-gradient-to-r from-primary to-accent text-white' : ''"
         @click="emit('select', group)"
       >
@@ -34,7 +34,7 @@ const emit = defineEmits<{
       </button>
     </div>
     <button 
-      class="group-tab px-4.5 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-text-secondary border-none cursor-pointer transition-all duration-normal hover:bg-primary/20"
+      class="group-tab px-5 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-text-secondary border-none cursor-pointer transition-all duration-normal hover:bg-primary/20"
       @click="emit('create')"
     >
       + 新建

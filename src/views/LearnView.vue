@@ -94,8 +94,13 @@ function handleSelectWord(word: { id: string }) {
           <WordList 
             :words="learningStore.words" 
             :active-word-id="learningStore.currentWord?.id"
+            :show-checkbox="false"
+            :max-visible="5"
             @select="handleSelectWord"
           />
+          <div v-if="learningStore.words.length > 5" class="text-center text-xs text-text-muted mt-2">
+            共 {{ learningStore.words.length }} 个单词，滚动查看更多
+          </div>
         </div>
       </aside>
 
