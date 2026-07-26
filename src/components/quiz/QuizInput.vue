@@ -1,30 +1,39 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import type { Word } from '@/types'
 
 const props = defineProps<{
   word: Word | null
   isCorrect: boolean | null
+  input: string
 }>()
 
 const emit = defineEmits<{
+  (e: 'update:input', value: string): void
   (e: 'submit', input: string): void
   (e: 'skip'): void
+  (e: 'next'): void
+  (e: 'prev'): void
 }>()
 
-const inputValue = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
 
+const inputValue = computed({
+  get: () => props.input,
+  set: (val) => emit('update:input', val)
+})
+
 watch(() => props.word, () => {
-  inputValue.value = ''
+  emit('update:input', '')
   setTimeout(() => {
     inputRef.value?.focus()
   }, 100)
 })
 
 function handleSubmit() {
-  if (inputValue.value.trim()) {
-    emit('submit', inputValue.value.trim())
+  const value = props.input.trim()
+  if (value) {
+    emit('submit', value)
   }
 }
 
@@ -69,6 +78,8 @@ function handleSkip() {
     <div class="quiz-actions flex gap-4">
       <button class="btn btn-outline" @click="handleSkip">跳过</button>
       <button class="btn btn-primary" @click="handleSubmit">提交</button>
+      <button v-if="isCorrect !== null" class="btn btn-outline" @click="emit('prev')">上一题</button>
+      <button v-if="isCorrect !== null" class="btn btn-primary" @click="emit('next')">下一题</button>
     </div>
   </div>
 </template>

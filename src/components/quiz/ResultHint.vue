@@ -5,10 +5,12 @@ const props = defineProps<{
   isCorrect: boolean | null
   feedback: string
   correctAnswer: string[]
+  wordDetail?: string
 }>()
 
 const emit = defineEmits<{
   (e: 'next'): void
+  (e: 'prev'): void
 }>()
 
 const isVisible = ref(false)
@@ -16,10 +18,6 @@ const isVisible = ref(false)
 watch(() => props.isCorrect, (newVal) => {
   if (newVal !== null) {
     isVisible.value = true
-    setTimeout(() => {
-      isVisible.value = false
-      emit('next')
-    }, 2000)
   }
 })
 </script>
@@ -35,6 +33,13 @@ watch(() => props.isCorrect, (newVal) => {
       <div class="feedback-text text-base font-medium text-text-primary">{{ feedback }}</div>
       <div class="feedback-detail text-sm text-text-secondary mt-2">
         正确答案：{{ correctAnswer.join('；') }}
+      </div>
+      <div v-if="wordDetail" class="feedback-detail text-sm text-text-secondary mt-2">
+        详细释义：{{ wordDetail }}
+      </div>
+      <div class="flex gap-3 mt-4">
+        <button class="btn btn-outline" @click="emit('prev')">上一题</button>
+        <button class="btn btn-primary" @click="emit('next')">下一题</button>
       </div>
     </div>
   </Transition>

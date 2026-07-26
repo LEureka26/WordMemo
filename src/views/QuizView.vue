@@ -59,6 +59,17 @@ function retryWrong() {
  showRetryWrong.value = false;
  quizStore.init(wordStore.activeGroup, true);
 }
+function handlePrev() {
+  if (quizStore.currentIndex > 0) {
+    quizStore.currentIndex--
+    quizStore.userInput = ''
+    quizStore.isCorrect = null
+    quizStore.feedback = ''
+    quizStore.correctAnswer = []
+    showResult.value = false
+  }
+}
+
 function backToLearn() {
   router.push('/')
 }
@@ -82,8 +93,11 @@ function backToLearn() {
           <QuizInput
             :word="quizStore.currentWord"
             :is-correct="quizStore.isCorrect"
+            v-model:input="quizStore.userInput"
             @submit="handleSubmit"
             @skip="handleSkip"
+            @next="handleNext"
+            @prev="handlePrev"
           />
 
           <ResultHint
@@ -91,6 +105,7 @@ function backToLearn() {
             :feedback="quizStore.feedback"
             :correct-answer="quizStore.correctAnswer"
             @next="handleNext"
+            @prev="handlePrev"
           />
         </div>
 
