@@ -70,17 +70,30 @@ export const useLearningStore = defineStore('learning', () => {
 
   async function markAsLearned() {
     if (!currentWord.value) return
-    
-    await toggleWordLearned(currentWord.value.id)
-    await incrementWordCorrect(currentWord.value.id)
-    
+
     const wordStore = useWordStore()
     const word = wordStore.getWordById(currentWord.value.id)
-    if (word) {
-      word.learned = !word.learned
+    if (!word) return
+
+    const newLearned = !word.learned
+    await toggleWordLearned(currentWord.value.id)
+    if (newLearned) {
+      await incrementWordCorrect(currentWord.value.id)
+    }
+
+    word.learned = newLearned
+    if (newLearned) {
       word.correct++
     }
-    
+
+    const localWord = words.value.find(w => w.id === currentWord.value!.id)
+    if (localWord) {
+      localWord.learned = newLearned
+      if (newLearned) {
+        localWord.correct++
+      }
+    }
+
     if (currentIndex.value < words.value.length - 1) {
       await next()
     }

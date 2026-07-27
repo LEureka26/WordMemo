@@ -111,11 +111,12 @@ function handlePrev() {
     </div>
 
     <div class="word-actions flex gap-4 relative z-10">
-      <button 
+      <button
         class="btn btn-outline"
+        :class="{ 'btn-success': word?.learned }"
         @click.stop="handleMarkLearned"
       >
-        标记已掌握
+        {{ word?.learned ? '取消已掌握' : '标记已掌握' }}
       </button>
       <button 
         class="btn btn-primary"
