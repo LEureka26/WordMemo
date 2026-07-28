@@ -1,9 +1,0 @@
-{
-  "name": "WordMemo",
-  "short_name": "WordMemo",
-  "description": "双端自适应单词学习工具",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#FFF8F0",
-  "theme_color": "#E8A87C"
-}
