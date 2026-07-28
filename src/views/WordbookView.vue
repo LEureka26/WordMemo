@@ -176,7 +176,7 @@ async function batchDeleteWords() {
 
 <template>
   <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
-    <NavBar :current-route="typeof route.name === 'string' ? route.name : ''" />
+    <NavBar />
 
     <div class="flex-1 flex flex-col gap-6 pb-24 md:pb-6">
       <div class="card">

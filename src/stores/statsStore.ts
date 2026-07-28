@@ -58,16 +58,23 @@ export const useStatsStore = defineStore('stats', () => {
   async function checkAchievements() {
     const wordStore = useWordStore()
     const learnedWords = wordStore.learnedCount
-    const correctCount = wordStore.allWords.reduce((sum: number, w: { correct: number }) => sum + w.correct, 0)
-    const totalAnswered = wordStore.allWords.reduce((sum: number, w: { correct: number; wrong: number }) => sum + w.correct + w.wrong, 0)
 
     achievements.forEach(achievement => {
       if (!streak.value.badges.includes(achievement.id)) {
-        if (achievement.condition(streak.value.count, correctCount, totalAnswered, learnedWords)) {
+        if (achievement.condition(streak.value.count, 0, 0, learnedWords)) {
           streak.value.badges.push(achievement.id)
         }
       }
     })
+  }
+
+  async function checkQuizAchievements(correctCount: number, totalCount: number) {
+    if (totalCount >= 5 && correctCount === totalCount) {
+      if (!streak.value.badges.includes('perfect_quiz')) {
+        streak.value.badges.push('perfect_quiz')
+        await save()
+      }
+    }
   }
 
   async function save() {
@@ -85,6 +92,7 @@ export const useStatsStore = defineStore('stats', () => {
     accuracy,
     load,
     checkIn,
+    checkQuizAchievements,
     save,
     getBadgeName,
   }

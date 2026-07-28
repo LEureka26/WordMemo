@@ -15,7 +15,6 @@ export const useQuizStore = defineStore('quiz', () => {
   const results = ref<QuizResult[]>([])
   const words = ref<Word[]>([])
   const isFinished = ref(false)
-  const wrongCount = ref(0)
   const isRetryMode = ref(false)
 
   const currentWord = computed(() => {
@@ -40,19 +39,22 @@ export const useQuizStore = defineStore('quiz', () => {
     return Math.round((correctCount.value / results.value.length) * 100)
   })
 
-  function init(group?: string, useWrongList: boolean = false) {
+  const wrongCount = computed(() => {
+    return results.value.filter(r => !r.isCorrect).length
+  })
+
+  function init(group?: string, customWords?: Word[], useWrongList: boolean = false) {
     const wordStore = useWordStore()
     let sourceWords: Word[]
-    
-    if (useWrongList) {
-      const wrongIds = wordStore.allWords.filter(w => w.wrong > 0).map(w => w.id)
-      sourceWords = wordStore.allWords.filter(w => wrongIds.includes(w.id))
+
+    if (customWords) {
+      sourceWords = [...customWords]
     } else if (group && wordStore.wordGroups[group]) {
       sourceWords = [...wordStore.wordGroups[group]]
     } else {
       sourceWords = [...wordStore.currentGroupWords]
     }
-    
+
     words.value = sourceWords.sort(() => Math.random() - 0.5)
     currentIndex.value = 0
     userInput.value = ''
@@ -61,7 +63,6 @@ export const useQuizStore = defineStore('quiz', () => {
     correctAnswer.value = []
     results.value = []
     isFinished.value = false
-    wrongCount.value = 0
     isRetryMode.value = useWrongList
   }
 
@@ -88,9 +89,8 @@ export const useQuizStore = defineStore('quiz', () => {
       await setWrongList(newWrongList)
     } else {
       feedback.value = '回答错误'
-      wrongCount.value++
       await incrementWordWrong(currentWord.value.id)
-      
+
       const word = wordStore.getWordById(currentWord.value.id)
       if (word) word.wrong++
     }
@@ -116,6 +116,28 @@ export const useQuizStore = defineStore('quiz', () => {
     }
   }
 
+  async function skipQuestion() {
+    if (!currentWord.value) return
+
+    const wordStore = useWordStore()
+    await incrementWordWrong(currentWord.value.id)
+
+    const word = wordStore.getWordById(currentWord.value.id)
+    if (word) word.wrong++
+
+    isCorrect.value = false
+    feedback.value = '已跳过'
+    correctAnswer.value = currentWord.value.chinese
+
+    results.value.push({
+      wordId: currentWord.value.id,
+      isCorrect: false,
+      userAnswer: '',
+      correctAnswer: currentWord.value.chinese,
+      timestamp: Date.now(),
+    })
+  }
+
   function reset() {
     currentIndex.value = 0
     userInput.value = ''
@@ -124,7 +146,6 @@ export const useQuizStore = defineStore('quiz', () => {
     correctAnswer.value = []
     results.value = []
     isFinished.value = false
-    wrongCount.value = 0
     isRetryMode.value = false
   }
 
@@ -148,6 +169,7 @@ export const useQuizStore = defineStore('quiz', () => {
     init,
     validate,
     nextQuestion,
+    skipQuestion,
     reset,
   }
 })

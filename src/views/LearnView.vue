@@ -23,13 +23,24 @@ const settingsStore = useSettingsStore()
 const showHelp = ref(false)
 const showAudioActivation = ref(false)
 
+function locateWordFromQuery() {
+  const wordId = route.query.wordId as string
+  if (!wordId) return
+  const index = learningStore.words.findIndex(w => w.id === wordId)
+  if (index !== -1) {
+    learningStore.currentIndex = index
+    learningStore.showChinese = false
+  }
+}
+
 onMounted(async () => {
   if (!audioService.isActivated()) {
     showAudioActivation.value = true
   }
-  
+
   learningStore.init(wordStore.activeGroup)
-  
+  locateWordFromQuery()
+
   keyboardHandler.setConfig({
     onPrev: () => learningStore.prev(),
     onNext: () => learningStore.next(),
@@ -41,6 +52,7 @@ onMounted(async () => {
 
 watch(() => wordStore.activeGroup, () => {
   learningStore.init(wordStore.activeGroup)
+  locateWordFromQuery()
 })
 
 function handleActivateAudio() {
@@ -66,7 +78,7 @@ function getStatusClass(word: { learned: boolean; wrong: number }): string {
 
 <template>
   <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
-    <NavBar :current-route="typeof route.name === 'string' ? route.name : ''" />
+    <NavBar />
 
     <div class="layout-desktop flex gap-6 flex-1">
       <aside class="desktop-sidebar w-[280px] flex-shrink-0 flex flex-col gap-5 hidden md:flex">

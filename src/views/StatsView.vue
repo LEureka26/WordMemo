@@ -63,7 +63,7 @@ async function handleClearWrongWords() {
 
 <template>
   <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
-    <NavBar :current-route="route.name || ''" />
+    <NavBar />
 
     <div class="flex gap-6 flex-1 pb-24 md:pb-6">
       <aside class="desktop-sidebar w-[280px] flex-shrink-0 flex flex-col gap-5 hidden md:flex">

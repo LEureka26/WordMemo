@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Word } from '@/types'
 import { useWordStore } from './wordStore'
-import { toggleWordLearned, incrementWordCorrect } from '@/services/storage'
+import { toggleWordLearned } from '@/services/storage'
 import { audioService } from '@/services/audio'
 import { useSettingsStore } from './settingsStore'
 
@@ -77,21 +77,12 @@ export const useLearningStore = defineStore('learning', () => {
 
     const newLearned = !word.learned
     await toggleWordLearned(currentWord.value.id)
-    if (newLearned) {
-      await incrementWordCorrect(currentWord.value.id)
-    }
 
     word.learned = newLearned
-    if (newLearned) {
-      word.correct++
-    }
 
     const localWord = words.value.find(w => w.id === currentWord.value!.id)
     if (localWord) {
       localWord.learned = newLearned
-      if (newLearned) {
-        localWord.correct++
-      }
     }
 
     if (currentIndex.value < words.value.length - 1) {

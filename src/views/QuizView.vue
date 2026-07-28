@@ -10,6 +10,7 @@ import { useQuizStore } from '@/stores/quizStore'
 import { useWordStore } from '@/stores/wordStore'
 import { useStatsStore } from '@/stores/statsStore'
 import { keyboardHandler } from '@/services/keyboard'
+import { getWrongList } from '@/services/storage'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,18 +22,39 @@ const showResult = ref(false)
 const showRetryWrong = ref(false)
 const wrongWords = ref<typeof wordStore.allWords>([])
 
-onMounted(() => {
+async function buildReviewWords(mode: string): Promise<typeof wordStore.allWords> {
+  const wrongList = await getWrongList()
+  if (mode === 'difficult') {
+    return wordStore.allWords.filter(w => w.wrong >= 3 && wrongList.includes(w.id))
+  }
+  return wordStore.allWords.filter(w => wrongList.includes(w.id))
+}
+
+async function safePush(path: string) {
+  try {
+    await router.push(path)
+  } catch (error) {
+    console.warn('页面跳转失败:', error)
+    alert('页面跳转失败，请重试')
+  }
+}
+
+onMounted(async () => {
   const mode = route.query.mode as string
   if (mode === 'wrong' || mode === 'difficult') {
-    const sourceWords = mode === 'difficult'
-      ? wordStore.allWords.filter(w => w.wrong >= 3)
-      : wordStore.allWords.filter(w => w.wrong > 0)
-    if (sourceWords.length === 0) {
-      alert('暂无错题，无需复习')
-      router.push('/')
+    try {
+      const sourceWords = await buildReviewWords(mode)
+      if (sourceWords.length === 0) {
+        alert(mode === 'difficult' ? '暂无需复习的难词' : '暂无错题，无需复习')
+        await safePush('/')
+        return
+      }
+      quizStore.init(undefined, sourceWords, true)
+    } catch {
+      alert('加载复习单词失败，请重试')
+      await safePush('/')
       return
     }
-    quizStore.init(undefined, true)
   } else {
     quizStore.init(wordStore.activeGroup)
   }
@@ -62,37 +84,27 @@ function handleSubmit() {
   showResult.value = true
 }
 
-function handleNext() {
+async function handleNext() {
   showResult.value = false
   quizStore.nextQuestion()
   if (quizStore.isFinished) {
     statsStore.checkIn(quizStore.total)
+    if (!quizStore.isRetryMode) {
+      await statsStore.checkQuizAchievements(quizStore.correctCount, quizStore.total)
+    }
   }
 }
 
-function handleSkip() {
-  quizStore.userInput = ''
-  quizStore.isCorrect = false
-  quizStore.feedback = '已跳过'
-  quizStore.correctAnswer = quizStore.currentWord?.chinese || []
-  quizStore.results.push({
-    wordId: quizStore.currentWord?.id || '',
-    isCorrect: false,
-    userAnswer: '',
-    correctAnswer: quizStore.currentWord?.chinese || [],
-    timestamp: Date.now(),
-  })
-  showResult.value = true
+async function retryWrong() {
+  showRetryWrong.value = false
+  const wrongIds = new Set(quizStore.results.filter(r => !r.isCorrect).map(r => r.wordId))
+  const sourceWords = wordStore.allWords.filter(w => wrongIds.has(w.id))
+  quizStore.init(undefined, sourceWords, true)
 }
 
-function retryWrong() {
+async function handleLater() {
   showRetryWrong.value = false
-  quizStore.init(wordStore.activeGroup, true)
-}
-
-function handleLater() {
-  showRetryWrong.value = false
-  router.push('/')
+  await safePush('/')
 }
 
 function handlePrev() {
@@ -106,14 +118,19 @@ function handlePrev() {
   }
 }
 
-function backToLearn() {
-  router.push('/')
+async function backToLearn() {
+  await safePush('/')
+}
+
+function handleSkip() {
+  quizStore.skipQuestion()
+  showResult.value = true
 }
 </script>
 
 <template>
   <div class="app-container max-w-[1440px] mx-auto px-6 min-h-screen flex flex-col">
-    <NavBar :current-route="typeof route.name === 'string' ? route.name : ''" />
+    <NavBar />
 
     <div class="flex-1 flex flex-col gap-6 pb-24 md:pb-6">
       <div class="card">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, onUnmounted } from 'vue'
 
 const props = defineProps<{
   isCorrect: boolean | null
@@ -14,12 +14,28 @@ const emit = defineEmits<{
 }>()
 
 const isVisible = ref(false)
+let autoNextTimer: ReturnType<typeof setTimeout> | null = null
+
+function clearAutoNext() {
+  if (autoNextTimer) {
+    clearTimeout(autoNextTimer)
+    autoNextTimer = null
+  }
+}
 
 watch(() => props.isCorrect, (newVal) => {
+  clearAutoNext()
   if (newVal !== null) {
     isVisible.value = true
+    autoNextTimer = setTimeout(() => {
+      emit('next')
+    }, 2000)
+  } else {
+    isVisible.value = false
   }
 })
+
+onUnmounted(clearAutoNext)
 </script>
 
 <template>

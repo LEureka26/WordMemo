@@ -58,7 +58,7 @@ class KeyboardHandler {
         }
         break
       case 'Enter':
-        if ((isInputFocused || e.ctrlKey) && this.config.onSubmit) {
+        if (this.config.onSubmit) {
           e.preventDefault()
           this.config.onSubmit()
         }

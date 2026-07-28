@@ -17,13 +17,13 @@ describe('quizStore', () => {
 
   it('init with wrong list mode', () => {
     const quizStore = useQuizStore()
-    quizStore.init(undefined, true)
+    quizStore.init(undefined, [], true)
     expect(quizStore.isRetryMode).toBe(true)
   })
 
   it('init without wrong list mode', () => {
     const quizStore = useQuizStore()
-    quizStore.init('四级基础', false)
+    quizStore.init('四级基础')
     expect(quizStore.isRetryMode).toBe(false)
   })
 
