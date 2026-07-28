@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import NavBar from '@/components/common/NavBar.vue'
 import GroupManager from '@/components/wordstore/GroupManager.vue'
 import WordList from '@/components/wordstore/WordList.vue'
@@ -8,7 +7,6 @@ import ImportExport from '@/components/wordstore/ImportExport.vue'
 import { useWordStore } from '@/stores/wordStore'
 import type { Word } from '@/types'
 
-const route = useRoute()
 const wordStore = useWordStore()
 
 const searchQuery = ref('')

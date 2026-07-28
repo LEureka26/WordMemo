@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import NavBar from '@/components/common/NavBar.vue'
 import StreakCard from '@/components/stats/StreakCard.vue'
@@ -10,7 +10,6 @@ import { useWordStore } from '@/stores/wordStore'
 import { useStatsStore } from '@/stores/statsStore'
 import { achievements } from '@/data/defaultWords'
 
-const route = useRoute()
 const router = useRouter()
 const wordStore = useWordStore()
 const statsStore = useStatsStore()
@@ -38,7 +37,6 @@ function getBadgeDescription(id: string): string {
     perfect_quiz: '单次默写全对',
     seven_days: '连续打卡7天',
     hundred_words: '累计学习100词',
-    perfect_week: '完美一周',
   }
   return descMap[id] || ''
 }

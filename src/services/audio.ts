@@ -327,15 +327,6 @@ class AudioService {
     this.rate = rate
   }
 
-  getRate(): number {
-    return this.rate
-  }
-
-  hasVoices(): boolean {
-    this.initVoices()
-    return this.voices.length > 0 || typeof Audio !== 'undefined'
-  }
-
   isSpeaking(): boolean {
     return this.speaking
   }

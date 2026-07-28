@@ -6,7 +6,6 @@ const props = defineProps<{
   words: Word[]
   activeWordId?: string
   showCheckbox?: boolean
-  maxVisible?: number
 }>()
 
 const emit = defineEmits<{

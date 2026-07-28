@@ -138,17 +138,6 @@ export const useQuizStore = defineStore('quiz', () => {
     })
   }
 
-  function reset() {
-    currentIndex.value = 0
-    userInput.value = ''
-    isCorrect.value = null
-    feedback.value = ''
-    correctAnswer.value = []
-    results.value = []
-    isFinished.value = false
-    isRetryMode.value = false
-  }
-
   return {
     currentIndex,
     userInput,
@@ -170,6 +159,5 @@ export const useQuizStore = defineStore('quiz', () => {
     validate,
     nextQuestion,
     skipQuestion,
-    reset,
   }
 })

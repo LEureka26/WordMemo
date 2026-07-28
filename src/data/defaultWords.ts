@@ -40,5 +40,4 @@ export const achievements = [
   { id: 'perfect_quiz', name: '默写全对', condition: (_: number, correct: number, total: number) => total >= 5 && correct === total },
   { id: 'seven_days', name: '连续7天', condition: (streak: number) => streak >= 7 },
   { id: 'hundred_words', name: '百词达人', condition: (_: number, __: number, ___: number, words: number) => words >= 100 },
-  { id: 'perfect_week', name: '完美一周', condition: (streak: number) => streak >= 7 },
 ]
